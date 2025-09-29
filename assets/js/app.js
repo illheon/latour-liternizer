@@ -1,6 +1,8 @@
 import { $, clamp, hashString, makeRNG, flash } from './util.js';
 import { loadLocalThings, saveLocalThings, resetLocalThings } from './local.js';
 import { fetchBalancedThings } from './wiki.js';
+import { fetchThemedThings } from './wiki.js';
+
 
 let LOCAL_THINGS = loadLocalThings();
 let WIKI_THINGS = [];
@@ -91,6 +93,30 @@ function generate(resetSeed){
   draw();
 }
 
+async function pullTheme(){
+  const n     = clamp(parseInt($('#count').value,10), 6, 40);
+  const lang  = $('#lang').value;
+  const kwRaw = $('#themeKeyword').value;
+  const kw    = (kwRaw||'').trim();
+
+  if(!kw){ flash('키워드를 입력해 주세요'); return; }
+
+  flash(`"${kw}" 관련 항목 수집 중…`);
+  try{
+    const titles = await fetchThemedThings({
+      lang, keyword: kw, total: n,
+      localPool: LOCAL_THINGS, personCap: 0.2
+    });
+    if(!titles.length) { flash('관련 결과가 부족합니다'); return; }
+    WIKI_THINGS = titles;
+    $('#source').value = 'wiki';
+    flash(`"${kw}" 관련 ${titles.length}개 생성`);
+    generate(true);
+  }catch(e){
+    console.error(e);
+    flash('키워드 생성 실패');
+  }
+}
 
 
 async function pullFromWiki(){
@@ -212,3 +238,5 @@ function init(){
 }
 
 init();
+
+$('#pullTheme').onclick = pullTheme;

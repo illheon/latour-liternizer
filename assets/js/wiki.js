@@ -1,5 +1,67 @@
 // assets/js/wiki.js
 import { clamp } from './util.js';
+import { clamp } from './util.js';
+export { isLikelyPerson } from './wiki_people_filter.js'; // (아래 B안 통합형이면 이 줄 불필요)
+
+// ① 검색 기반: 키워드로 문서 제목 수집
+export async function fetchWikipediaSearchTitles(lang='ko', query='', limit=20){
+  const q = (query||'').trim();
+  if(!q) return [];
+  const capped = clamp(limit,1,50);
+  const url = new URL(`https://${lang}.wikipedia.org/w/api.php`);
+  url.search = new URLSearchParams({
+    action:'query', format:'json', list:'search',
+    srsearch: q, srlimit:String(capped), srnamespace:'0',
+    origin:'*'
+  }).toString();
+  const res = await fetch(url);
+  if(!res.ok) throw new Error('HTTP '+res.status);
+  const data = await res.json();
+  const out = [];
+  if(data?.query?.search){
+    for(const it of data.query.search){
+      if(it?.title) out.push(it.title);
+    }
+  }
+  return out;
+}
+
+// ② 아주 간단한 주제 시소러스(언어별 동의어/연관어 프롬프트)
+const THEME_SYNONYMS = {
+  ko: {
+    '회전': ['회전','회전운동','자전','공전','스핀','각운동량','원운동','소용돌이','선풍','토네이도','회전체','드릴','턴테이블','빙글빙글'],
+  },
+  en: {
+    'rotation': ['rotation','spin','angular momentum','circular motion','vortex','spiral','whirl','gyroscope','centrifugal','torque','turntable','swirl']
+  }
+};
+
+// ③ 키워드 → 쿼리 세트 만들기
+function expandThemeQueries(lang='ko', keyword=''){
+  const kw = (keyword||'').trim();
+  const bag = new Set();
+  if(!kw) return [];
+  bag.add(kw);
+
+  // 언어별 시소러스
+  const dict = THEME_SYNONYMS[lang] || {};
+  const lowerKey = kw.toLowerCase();
+  // 정확 키에 매칭되면 해당 배열 추가
+  for(const [k, arr] of Object.entries(dict)){
+    if(k === kw || k === lowerKey) arr.forEach(x=>bag.add(x));
+  }
+
+  // 언어 반대편도 시도(한글-영문 전환 키워드 몇 개 하드코딩)
+  if(lang==='ko' && /회전|자전|공전/.test(kw)) {
+    ['rotation','spin','vortex','angular momentum'].forEach(x=>bag.add(x));
+  }
+  if(lang==='en' && /rotation|spin/.test(lowerKey)) {
+    ['회전','자전','공전','각운동량','소용돌이'].forEach(x=>bag.add(x));
+  }
+
+  return Array.from(bag).slice(0,12); // 과도한 쿼리 방지
+}
+
 
 /** 기본: 무작위 제목 가져오기 */
 export async function fetchWikipediaRandomTitles(lang='ko', limit=20){
