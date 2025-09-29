@@ -7,6 +7,7 @@ let LOCAL_THINGS = loadLocalThings();
 let WIKI_THINGS = [];
 let litany = [];
 let lastSeed = 0;
+let backfillLocalWhenShort = true; // 기본은 보충 ON
 
 const canvas = $('#canvas');
 const ctx = canvas.getContext('2d');
@@ -80,10 +81,13 @@ function generate(resetSeed){
   const source = $('#source').value;
 
   let pool = (source==='wiki') ? [...WIKI_THINGS] : [...LOCAL_THINGS];
-  if(pool.length < n){
-    const add = LOCAL_THINGS.filter(x=>!pool.includes(x));
-    pool.push(...add);
-  }
+
+// ⛔ 소스가 wiki이고 보충이 꺼져 있으면 로컬 보충 금지
+if (pool.length < n && !(source==='wiki' && backfillLocalWhenShort === false)) {
+  const add = LOCAL_THINGS.filter(x => !pool.includes(x));
+  pool.push(...add);
+}
+
   litany = [];
   for(let i=0;i<n && pool.length>0;i++){
     const idx = Math.floor(rng()*pool.length);
@@ -103,12 +107,13 @@ async function pullTheme(){
   flash(`"${kw}" 관련 항목 수집 중…`);
   try{
     const titles = await fetchThemedThings({
-      lang, keyword: kw, total: n,
-      localPool: LOCAL_THINGS, personCap: 0.2
+      lang, keyword: kw, total: n, personCap: 0.2
     });
     if(!titles.length) { flash('관련 결과가 부족합니다'); return; }
     WIKI_THINGS = titles;
     $('#source').value = 'wiki';
+      // ← 키워드 모드: 보충 끔
+  backfillLocalWhenShort = false;
     flash(`"${kw}" 관련 ${titles.length}개 생성`);
     generate(true);
   }catch(e){
@@ -137,6 +142,8 @@ async function pullFromWiki(){
     if(!titles.length) throw new Error('결과 없음');
     WIKI_THINGS = titles;
     $('#source').value = 'wiki';
+    backfillLocalWhenShort = true;
+
     flash(`위키(균형)에서 ${titles.length}개 로드됨 (인명≤${Math.round(PERSON_CAP*100)}%)`);
     generate(true);
   }catch(e){
