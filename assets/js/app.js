@@ -142,7 +142,7 @@ async function pullFromWiki(){
     if(!titles.length) throw new Error('결과 없음');
     WIKI_THINGS = titles;
     $('#source').value = 'wiki';
-    backfillLocalWhenShort = true;
+      backfillLocalWhenShort = true;
 
     flash(`위키(균형)에서 ${titles.length}개 로드됨 (인명≤${Math.round(PERSON_CAP*100)}%)`);
     generate(true);
@@ -226,6 +226,8 @@ function bindUI(){
   $('#btnImport').onclick = ()=> $('#fileInput').click();
   $('#fileInput').addEventListener('change', handleImport);
   $('#btnExport').onclick = handleExport;
+  $('#pullTheme').onclick = pullTheme;
+  $('#editLocal').onclick = openEditor;
 }
 
 function init(){
