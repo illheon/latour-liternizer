@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>Latour Litanizer — Vanilla JS</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="라투르식 리터니를 바닐라 JS로 생성하는 실험" />
+  <meta property="og:title" content="Latour Litanizer" />
+  <meta property="og:description" content="인간-비인간 평평한 존재론을 감각적으로 드러내는 리스트 생성기" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/assets/img/og.png" />
+  <link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+  <div id="ui">
+    <label>개수 <input id="count" type="range" min="6" max="40" value="14"></label>
+    <label>씨드 <input id="seed" type="text" placeholder="(선택) 예: 2025-ALIEN"></label>
+    <label><input id="caps" type="checkbox"> ALL CAPS</label>
+    <div class="sep"></div>
+    <label>소스 
+      <select id="source">
+        <option value="local">로컬 리스트</option>
+        <option value="wiki">위키 랜덤</option>
+      </select>
+    </label>
+    <label>언어 
+      <select id="lang">
+        <option value="ko">한국어</option>
+        <option value="en">English</option>
+      </select>
+    </label>
+    <button id="pullwiki" class="secondary">위키에서 가져오기</button>
+    <div class="sep"></div>
+    <button id="editLocal" class="secondary">로컬 데이터 편집</button>
+    <button id="regen">리터니 생성</button>
+    <button id="copy" class="secondary">텍스트 복사</button>
+    <button id="save" class="secondary">PNG 저장</button>
+  </div>
+  <div id="hint">스페이스: 새로고침 · S: 저장 · C: 복사 · E: 편집</div>
+
+  <div id="wrap"><canvas id="canvas"></canvas></div>
+
+  <!-- Modal -->
+  <div id="modalWrap">
+    <div id="modal">
+      <header>
+        <h3>로컬 데이터 편집 (줄바꿈으로 구분)</h3>
+        <div class="toolbar">
+          <button id="btnReset">로컬로 리셋</button>
+          <label class="secondary" style="display:inline-flex;align-items:center;gap:6px;">
+            <input type="file" id="fileInput" accept="application/json">
+            <span id="btnImport" style="cursor:pointer;">가져오기(JSON)</span>
+          </label>
+          <button id="btnExport">내보내기(JSON)</button>
+        </div>
+      </header>
+      <div id="editor"><textarea id="ta"></textarea></div>
+      <footer>
+        <button id="btnCancel">취소</button>
+        <button id="btnSaveLocal">저장</button>
+      </footer>
+    </div>
+  </div>
+
+  <script type="module" src="/assets/js/app.js"></script>
+</body>
+</html>
