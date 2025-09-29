@@ -1,6 +1,6 @@
 import { $, clamp, hashString, makeRNG, flash } from './util.js';
 import { loadLocalThings, saveLocalThings, resetLocalThings } from './local.js';
-import { fetchWikipediaRandomTitles } from './wiki.js';
+import { fetchBalancedThings } from './wiki.js';
 
 let LOCAL_THINGS = loadLocalThings();
 let WIKI_THINGS = [];
