@@ -1,5 +1,4 @@
 export const $ = sel => document.querySelector(sel);
-
 export function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
 
 export function hashString(s){
@@ -8,7 +7,6 @@ export function hashString(s){
   return h>>>0;
 }
 
-// xorshift32 기반 PRNG (0..1)
 export function makeRNG(seed){
   let x = seed || 123456789;
   return function(){

@@ -5,10 +5,6 @@
   <title>Latour Litanizer — Vanilla JS</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="description" content="라투르식 리터니를 바닐라 JS로 생성하는 실험" />
-  <meta property="og:title" content="Latour Litanizer" />
-  <meta property="og:description" content="인간-비인간 평평한 존재론을 감각적으로 드러내는 리스트 생성기" />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="/assets/img/og.png" />
   <link rel="stylesheet" href="/assets/css/style.css" />
 </head>
 <body>
@@ -17,10 +13,11 @@
     <label>씨드 <input id="seed" type="text" placeholder="(선택) 예: 2025-ALIEN"></label>
     <label><input id="caps" type="checkbox"> ALL CAPS</label>
     <div class="sep"></div>
+
     <label>소스 
       <select id="source">
         <option value="local">로컬 리스트</option>
-        <option value="wiki">위키 랜덤</option>
+        <option value="wiki">위키</option>
       </select>
     </label>
     <label>언어 
@@ -29,19 +26,22 @@
         <option value="en">English</option>
       </select>
     </label>
+    <button id="pullwiki" class="secondary">위키에서 가져오기</button>
+
+    <div class="sep"></div>
     <label>키워드 
       <input id="themeKeyword" type="text" placeholder="예: 회전 / rotation" />
     </label>
     <button id="pullTheme" class="secondary">키워드로 생성</button>
-    <button id="pullwiki" class="secondary">위키에서 가져오기</button>
+
     <div class="sep"></div>
     <button id="editLocal" class="secondary">로컬 데이터 편집</button>
     <button id="regen">리터니 생성</button>
     <button id="copy" class="secondary">텍스트 복사</button>
     <button id="save" class="secondary">PNG 저장</button>
   </div>
-  <div id="hint">Tip: 위키/키워드 버튼으로 생성하고, PNG 저장/텍스트 복사 버튼을 사용하세요.</div>
 
+  <div id="hint">Tip: 위키/키워드 버튼으로 생성 후, PNG 저장/텍스트 복사 버튼을 쓰세요.</div>
   <div id="wrap"><canvas id="canvas"></canvas></div>
 
   <!-- Modal -->
