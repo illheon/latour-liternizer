@@ -1,7 +1,6 @@
 import { $, clamp, hashString, makeRNG, flash } from './util.js';
 import { loadLocalThings, saveLocalThings, resetLocalThings } from './local.js';
-import { fetchBalancedThings } from './wiki.js';
-import { fetchThemedThings } from './wiki.js';
+import { fetchBalancedThings, fetchThemedThings } from './wiki.js';
 
 
 let LOCAL_THINGS = loadLocalThings();
@@ -207,6 +206,7 @@ function bindUI(){
   $('#caps').onchange = draw;
   $('#seed').addEventListener('change', ()=> generate(true));
   $('#pullwiki').onclick = pullFromWiki;
+  $('#pullTheme').onclick = pullTheme;
   $('#editLocal').onclick = openEditor;
 
   // Modal
@@ -239,4 +239,3 @@ function init(){
 
 init();
 
-$('#pullTheme').onclick = pullTheme;
