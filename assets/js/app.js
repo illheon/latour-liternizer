@@ -220,7 +220,7 @@ function bindUI(){
   $('#btnImport').onclick = ()=> $('#fileInput').click();
   $('#fileInput').addEventListener('change', handleImport);
   $('#btnExport').onclick = handleExport;
-
+}
 
 function init(){
   fitCanvas();
