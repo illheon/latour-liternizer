@@ -206,7 +206,6 @@ function bindUI(){
   $('#caps').onchange = draw;
   $('#seed').addEventListener('change', ()=> generate(true));
   $('#pullwiki').onclick = pullFromWiki;
-  $('#pullTheme').onclick = pullTheme;
   $('#editLocal').onclick = openEditor;
 
   // Modal
