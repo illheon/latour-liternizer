@@ -91,22 +91,35 @@ function generate(resetSeed){
   draw();
 }
 
+
+
 async function pullFromWiki(){
-  const n = clamp(parseInt($('#count').value,10), 6, 40);
+  const n    = clamp(parseInt($('#count').value,10), 6, 40);
   const lang = $('#lang').value;
+
+  // 인명 상한 비율(원하면 0.1~0.3 사이로 조절)
+  const PERSON_CAP = 0.2;        // 20%
+  const OVERSAMPLE = 3;          // 위키 과샘플 배수
+
   flash('위키에서 가져오는 중…');
   try{
-    const titles = await fetchWikipediaRandomTitles(lang, n);
+    const titles = await fetchBalancedThings({
+      lang, total: n,
+      localPool: LOCAL_THINGS,    // 부족분 보충
+      personCap: PERSON_CAP,
+      oversampleFactor: OVERSAMPLE
+    });
     if(!titles.length) throw new Error('결과 없음');
     WIKI_THINGS = titles;
     $('#source').value = 'wiki';
-    flash(`위키에서 ${titles.length}개 로드됨`);
+    flash(`위키(균형)에서 ${titles.length}개 로드됨 (인명≤${Math.round(PERSON_CAP*100)}%)`);
     generate(true);
   }catch(e){
     console.error(e);
     flash('가져오기 실패 (네트워크/권한 확인)');
   }
 }
+
 
 function openEditor(){
   $('#ta').value = LOCAL_THINGS.join('\n');
