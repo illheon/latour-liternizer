@@ -221,14 +221,6 @@ function bindUI(){
   $('#fileInput').addEventListener('change', handleImport);
   $('#btnExport').onclick = handleExport;
 
-  // Shortcuts
-  window.addEventListener('keydown', (e)=>{
-    if(e.key===' '){ e.preventDefault(); generate(true); }
-    else if(e.key==='s'||e.key==='S'){ e.preventDefault(); savePNG(); }
-    else if(e.key==='c'||e.key==='C'){ e.preventDefault(); navigator.clipboard.writeText(litany.join(', ')+'.'); }
-    else if(e.key==='e'||e.key==='E'){ e.preventDefault(); openEditor(); }
-  });
-}
 
 function init(){
   fitCanvas();
